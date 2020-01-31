@@ -5,6 +5,9 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
@@ -33,6 +36,13 @@ public class ImageFragment extends Fragment {
     private ProgressBar loading;
     private FloatingActionButton calendar;
     private Apod apod;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -65,6 +75,35 @@ public class ImageFragment extends Fragment {
                 (int) getResources().getDimension(R.dimen.toast_vertical_margin));
             toast.show();
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.options, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        boolean handled = true;
+        switch (item.getItemId()) {
+            case R.id.info:
+                if (apod != null) {
+                    InfoFragment fragment = new InfoFragment();
+                    Bundle args = new Bundle();
+                    args.putString(InfoFragment.TITLE_KEY, apod.getTitle());
+                    args.putString(InfoFragment.DESCRIPTION_KEY, apod.getDescription());
+                    args.putString(InfoFragment.COPYRIGHT_KEY, apod.getCopyright());
+                    args.putSerializable(InfoFragment.DATE_KEY, apod.getDate());
+                    fragment.setArguments(args);
+                    fragment.show(getChildFragmentManager(), fragment.getClass().getName());
+
+                }
+                break;
+            default:
+                handled = super.onOptionsItemSelected(item);
+        }
+        return handled;
     }
 
     private void setupWebView(View root) {
