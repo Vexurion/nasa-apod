@@ -1,18 +1,21 @@
 package edu.cnm.deepdive.nasaapod.service;
 
 import android.app.Application;
+import androidx.annotation.Nullable;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
+import edu.cnm.deepdive.nasaapod.model.dao.AccessDao;
 import edu.cnm.deepdive.nasaapod.model.dao.ApodDao;
+import edu.cnm.deepdive.nasaapod.model.entity.Access;
 import edu.cnm.deepdive.nasaapod.model.entity.Apod;
 import edu.cnm.deepdive.nasaapod.service.ApodDatabase.Converters;
 import java.util.Date;
 
 @Database(
-    entities = {Apod.class},
+    entities = {Apod.class, Access.class},
     version = 1,
     exportSchema = true
 )
@@ -23,8 +26,8 @@ public abstract class ApodDatabase extends RoomDatabase {
 
   private static Application context;
 
-  public static void setContex(Application context) {
-    ApodDatabase.context =context;
+  public static void setContext(Application context) {
+    ApodDatabase.context = context;
   }
 
   public static ApodDatabase getInstance() {
@@ -33,6 +36,8 @@ public abstract class ApodDatabase extends RoomDatabase {
 
   public abstract ApodDao getApodDao();
 
+  public abstract AccessDao getAccessDao();
+
   private static class InstanceHolder {
 
     private static final ApodDatabase INSTANCE = Room.databaseBuilder(
@@ -40,6 +45,7 @@ public abstract class ApodDatabase extends RoomDatabase {
         .build();
 
   }
+
   public static class Converters {
 
     @TypeConverter
@@ -51,6 +57,8 @@ public abstract class ApodDatabase extends RoomDatabase {
     public static Date fromLong(Long value) {
       return (value != null) ? new Date(value) : null;
     }
+
   }
 
 }
+

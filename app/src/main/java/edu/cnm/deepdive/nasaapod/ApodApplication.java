@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.nasaapod.viewmodel;
+package edu.cnm.deepdive.nasaapod;
 
 import android.app.Application;
 import com.facebook.stetho.Stetho;
@@ -10,7 +10,8 @@ public class ApodApplication extends Application {
   public void onCreate() {
     super.onCreate();
     Stetho.initializeWithDefaults(this);
-    ApodDatabase.setContex(this);
+    ApodDatabase.setContext(this);
     new Thread(() -> ApodDatabase.getInstance().getApodDao().delete()).start();
   }
+
 }
