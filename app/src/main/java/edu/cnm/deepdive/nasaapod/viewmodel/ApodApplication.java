@@ -11,5 +11,6 @@ public class ApodApplication extends Application {
     super.onCreate();
     Stetho.initializeWithDefaults(this);
     ApodDatabase.setContex(this);
+    new Thread(() -> ApodDatabase.getInstance().getApodDao().delete()).start();
   }
 }
